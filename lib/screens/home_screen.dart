@@ -222,6 +222,12 @@ class _HomeScreenState extends State<HomeScreen> {
               "${WeatherUtils.takeHours(hourly!['precipitation'], selectedHours)[0]}",
           unity: "mm",
         ),
+      if (WeatherUtils.takeHours(hourly!['is_day'], selectedHours).isNotEmpty)
+        GridItem(
+          icon: hourly!['is_day'] == 1 ? Icons.sunny : Icons.nightlight,
+          label: "Time",
+          value: hourly!['is_day'] == 1 ? "Day" : "Night",
+        ),
     ];
     return GenericGrid<GridItem>(
       items: items,

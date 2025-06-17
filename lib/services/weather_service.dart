@@ -16,7 +16,8 @@ class WeatherService {
       "relative_humidity_2m",
       "cloudcover",
       "precipitation",
-      "windspeed_10m"
+      "windspeed_10m",
+      "is_day"
     ]).join(',');
 
     final urlString = '$_baseUrl'
