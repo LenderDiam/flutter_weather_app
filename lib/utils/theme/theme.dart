@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_app/utils/theme/custom_themes/dropdown_theme.dart';
+import 'custom_themes/dropdown_theme.dart';
 import 'custom_themes/color_scheme.dart';
 import 'custom_themes/text_theme.dart';
 import 'custom_themes/appbar_theme.dart';
