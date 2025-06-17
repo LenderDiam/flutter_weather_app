@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/grid_item_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
+import 'package:flutter_weather_app/utils/theme/custom_themes/color_scheme.dart';
 import 'package:flutter_weather_app/utils/weather/weather_utils.dart';
 import 'package:flutter_weather_app/widgets/expendable_button_widget.dart';
 import 'package:flutter_weather_app/widgets/generic_grid_widget.dart';
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   else if (error != null)
                     Text(error!,
                         style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: Colors.red))
+                            ?.copyWith(color: AppColors.error))
                   else if (current != null && hourly != null)
                     _weatherDisplay(theme)
                   else
