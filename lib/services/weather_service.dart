@@ -2,24 +2,25 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
+  static const List<String> hourlyFields = [
+    "temperature_2m",
+    "apparent_temperature",
+    "relative_humidity_2m",
+    "cloudcover",
+    "precipitation",
+    "windspeed_10m",
+    "is_day"
+  ];
+
+  static String get hourlyParams => hourlyFields.join(',');
+
   static const _baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
   Uri _buildWeatherUrl({
     required double latitude,
     required double longitude,
     String timezone = 'Europe/Paris',
-    List<String>? hourlyFields,
   }) {
-    final hourlyParams = (hourlyFields ?? [
-      "temperature_2m",
-      "apparent_temperature",
-      "relative_humidity_2m",
-      "cloudcover",
-      "precipitation",
-      "windspeed_10m",
-      "is_day"
-    ]).join(',');
-
     final urlString = '$_baseUrl'
         '?latitude=$latitude'
         '&longitude=$longitude'

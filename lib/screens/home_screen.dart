@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? error;
   int selectedHours = 24;
   bool showHourly = false;
+  final List<String> hourlyFields = WeatherService.hourlyFields;
 
   final weatherService = WeatherService();
   final _formKey = GlobalKey<FormState>();
