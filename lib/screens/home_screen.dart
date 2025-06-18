@@ -255,69 +255,112 @@ class _HomeScreenState extends State<HomeScreen> {
     if (times.isEmpty) {
       return const Text("No hourly forecast available for this interval.");
     }
+
+
+    DateTime? firstDay;
+    List<int> dayNumbers = [];
+    for (var t in times) {
+      DateTime dt = DateTime.parse(t);
+      firstDay ??= DateTime(dt.year, dt.month, dt.day);
+      int dayNum = dt.difference(firstDay).inDays + 1;
+      dayNumbers.add(dayNum);
+    }
+
     return SizedBox(
-      height: 160,
+      height: 350,
       width: double.infinity,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: times.length,
         itemBuilder: (context, i) {
+          final timeStr = times[i].toString();
+          final hour = timeStr.substring(11, 16);
+
+          List<Widget> dataRows = [];
+
+          void addRow(IconData icon, String label, String value, {String? unit}) {
+            dataRows.add(
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Icon(icon, size: 21, color: theme.colorScheme.primary),
+                    const SizedBox(width: 7),
+                    Expanded(
+                      child: Text(
+                        '$label: $value${unit ?? ""}',
+                        style: theme.textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          final temp = WeatherUtils.takeHours(hourly!['temperature_2m'], selectedHours);
+          if (temp.length > i) {
+            addRow(Icons.thermostat, "Temp", "${temp[i]}", unit: "°C");
+          }
+          final apparent = WeatherUtils.takeHours(hourly!['apparent_temperature'], selectedHours);
+          if (apparent.length > i) {
+            addRow(Icons.thermostat_outlined, "Ressentie", "${apparent[i]}", unit: "°C");
+          }
+          final humidity = WeatherUtils.takeHours(hourly!['relative_humidity_2m'], selectedHours);
+          if (humidity.length > i) {
+            addRow(Icons.water_drop, "Humidité", "${humidity[i]}", unit: "%");
+          }
+          final cloud = WeatherUtils.takeHours(hourly!['cloudcover'], selectedHours);
+          if (cloud.length > i) {
+            addRow(Icons.cloud, "Nuages", "${cloud[i]}", unit: "%");
+          }
+          final precip = WeatherUtils.takeHours(hourly!['precipitation'], selectedHours);
+          if (precip.length > i) {
+            addRow(Icons.grain, "Précip.", "${precip[i]}", unit: "mm");
+          }
+          final wind = WeatherUtils.takeHours(hourly!['windspeed_10m'], selectedHours);
+          if (wind.length > i) {
+            addRow(Icons.air, "Vent", "${wind[i]}", unit: "km/h");
+          }
+
+          // Optionnel : afficher si c'est le jour ou la nuit avec un icône
+          final isDay = WeatherUtils.takeHours(hourly!['is_day'], selectedHours);
+          if (isDay.length > i) {
+            addRow(
+                isDay[i] == 1 ? Icons.sunny : Icons.nightlight_round,
+                "Période",
+                isDay[i] == 1 ? "Jour" : "Nuit"
+            );
+          }
+
           return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            elevation: 3,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Container(
-              width: 140,
-              padding: const EdgeInsets.all(10),
+              width: 300,
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Affichage Jour et Heure
                   Text(
-                    times[i].toString().substring(11, 16),
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    "Jour ${dayNumbers[i]}",
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(height: 2),
-                  if (WeatherUtils.takeHours(
-                              hourly!['temperature_2m'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "🌡 ${WeatherUtils.takeHours(hourly!['temperature_2m'], selectedHours)[i]}°C",
-                        style: theme.textTheme.bodyMedium),
-                  if (WeatherUtils.takeHours(
-                              hourly!['apparent_temperature'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "🥵 ${WeatherUtils.takeHours(hourly!['apparent_temperature'], selectedHours)[i]}°C",
-                        style: theme.textTheme.bodyMedium),
-                  if (WeatherUtils.takeHours(
-                              hourly!['relative_humidity_2m'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "💧 ${WeatherUtils.takeHours(hourly!['relative_humidity_2m'], selectedHours)[i]}%",
-                        style: theme.textTheme.bodyMedium),
-                  if (WeatherUtils.takeHours(
-                              hourly!['cloudcover'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "☁️ ${WeatherUtils.takeHours(hourly!['cloudcover'], selectedHours)[i]}%",
-                        style: theme.textTheme.bodyMedium),
-                  if (WeatherUtils.takeHours(
-                              hourly!['precipitation'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "🌧 ${WeatherUtils.takeHours(hourly!['precipitation'], selectedHours)[i]}mm",
-                        style: theme.textTheme.bodyMedium),
-                  if (WeatherUtils.takeHours(
-                              hourly!['windspeed_10m'], selectedHours)
-                          .length >
-                      i)
-                    Text(
-                        "💨 ${WeatherUtils.takeHours(hourly!['windspeed_10m'], selectedHours)[i]}km/h",
-                        style: theme.textTheme.bodyMedium),
+                  Text(
+                    hour,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ...dataRows,
                 ],
               ),
             ),
