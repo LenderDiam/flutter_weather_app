@@ -68,6 +68,7 @@ class HourlyForecastCard extends StatelessWidget {
     }
 
     return Card(
+      color: index % 2 == 1 ? theme.colorScheme.surfaceContainerHighest : null,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

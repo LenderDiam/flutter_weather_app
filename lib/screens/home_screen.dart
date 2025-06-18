@@ -237,7 +237,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return GenericGrid<GridItem>(
       items: items,
-      itemBuilder: (context, item) => GridItemTile(item: item, theme: theme),
+      itemBuilder: (context, item, index) => GridItemTile(
+        item: item,
+        index: index,
+        theme: theme,
+      ),
     );
   }
 

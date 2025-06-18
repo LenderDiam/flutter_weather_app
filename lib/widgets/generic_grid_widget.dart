@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class GenericGrid<T> extends StatelessWidget {
   final List<T> items;
   final int crossAxisCount;
-  final Widget Function(BuildContext context, T item) itemBuilder;
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
   const GenericGrid({
     super.key,
@@ -21,7 +21,10 @@ class GenericGrid<T> extends StatelessWidget {
       childAspectRatio: 0.8,
       mainAxisSpacing: 8,
       crossAxisSpacing: 8,
-      children: items.map((item) => itemBuilder(context, item)).toList(),
+      children: List.generate(
+        items.length,
+            (index) => itemBuilder(context, items[index], index),
+      ),
     );
   }
 }

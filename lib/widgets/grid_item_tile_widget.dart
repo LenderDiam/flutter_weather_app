@@ -4,11 +4,13 @@ import 'package:flutter_weather_app/models/grid_item_model.dart';
 class GridItemTile extends StatelessWidget {
   final GridItem item;
   final ThemeData? theme;
+  final int index;
 
   const GridItemTile({
     super.key,
     required this.item,
     this.theme,
+    required this.index,
   });
 
   @override
@@ -16,13 +18,14 @@ class GridItemTile extends StatelessWidget {
     final ThemeData usedTheme = theme ?? Theme.of(context);
 
     return Card(
+      color: index % 2 == 1 ? usedTheme.colorScheme.surfaceContainerHighest : null,
       child: SizedBox.expand(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(item.icon, size: 26, color: Theme.of(context).colorScheme.secondary),
+            Icon(item.icon, size: 26, color: usedTheme.colorScheme.secondary),
             const SizedBox(height: 4),
             Text(
               item.label,
