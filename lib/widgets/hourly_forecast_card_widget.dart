@@ -48,19 +48,19 @@ class HourlyForecastCard extends StatelessWidget {
       addRow(Icons.thermostat, "Temp", "${hourData['temperature_2m']![index]}", unit: "°C");
     }
     if (hourData['apparent_temperature']!.length > index) {
-      addRow(Icons.thermostat_outlined, "Ressentie", "${hourData['apparent_temperature']![index]}", unit: "°C");
-    }
-    if (hourData['relative_humidity_2m']!.length > index) {
-      addRow(Icons.water_drop, "Humidité", "${hourData['relative_humidity_2m']![index]}", unit: "%");
-    }
-    if (hourData['cloudcover']!.length > index) {
-      addRow(Icons.cloud, "Nuages", "${hourData['cloudcover']![index]}", unit: "%");
-    }
-    if (hourData['precipitation']!.length > index) {
-      addRow(Icons.grain, "Précip.", "${hourData['precipitation']![index]}", unit: "mm");
+      addRow(Icons.thermostat_outlined, "Feels like", "${hourData['apparent_temperature']![index]}", unit: "°C");
     }
     if (hourData['windspeed_10m']!.length > index) {
-      addRow(Icons.air, "Vent", "${hourData['windspeed_10m']![index]}", unit: "km/h");
+      addRow(Icons.air, "Wind", "${hourData['windspeed_10m']![index]}", unit: "km/h");
+    }
+    if (hourData['cloudcover']!.length > index) {
+      addRow(Icons.cloud, "Cloud cover", "${hourData['cloudcover']![index]}", unit: "%");
+    }
+    if (hourData['precipitation']!.length > index) {
+      addRow(Icons.grain, "Precip.", "${hourData['precipitation']![index]}", unit: "mm");
+    }
+    if (hourData['relative_humidity_2m']!.length > index) {
+      addRow(Icons.water_drop, "Humidity", "${hourData['relative_humidity_2m']![index]}", unit: "%");
     }
     if (hourData['is_day']!.length > index) {
       final isDay = hourData['is_day']![index] == 1;

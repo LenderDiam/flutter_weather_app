@@ -193,12 +193,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     final items = <GridItem>[
-      GridItem(
-        icon: Icons.air,
-        label: "Wind",
-        value: "${current!['windspeed']}",
-        unity: "km/h",
-      ),
       if (firstValues['apparent_temperature'] != null)
         GridItem(
           icon: Icons.thermostat,
@@ -206,18 +200,17 @@ class _HomeScreenState extends State<HomeScreen> {
           value: "${firstValues['apparent_temperature']}",
           unity: "°C",
         ),
+      GridItem(
+        icon: Icons.air,
+        label: "Wind",
+        value: "${current!['windspeed']}",
+        unity: "km/h",
+      ),
       if (firstValues['cloudcover'] != null)
         GridItem(
           icon: Icons.cloud,
           label: "Cloud cover",
           value: "${firstValues['cloudcover']}",
-          unity: "%",
-        ),
-      if (firstValues['relative_humidity_2m'] != null)
-        GridItem(
-          icon: Icons.water_drop,
-          label: "Humidity",
-          value: "${firstValues['relative_humidity_2m']}",
           unity: "%",
         ),
       if (firstValues['precipitation'] != null)
@@ -226,6 +219,13 @@ class _HomeScreenState extends State<HomeScreen> {
           label: "Precip.",
           value: "${firstValues['precipitation']}",
           unity: "mm",
+        ),
+      if (firstValues['relative_humidity_2m'] != null)
+        GridItem(
+          icon: Icons.water_drop,
+          label: "Humidity",
+          value: "${firstValues['relative_humidity_2m']}",
+          unity: "%",
         ),
       if (firstValues['is_day'] != null)
         GridItem(
