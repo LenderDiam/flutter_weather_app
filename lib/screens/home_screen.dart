@@ -6,6 +6,7 @@ import 'package:flutter_weather_app/utils/weather/weather_utils.dart';
 import 'package:flutter_weather_app/widgets/expendable_button_widget.dart';
 import 'package:flutter_weather_app/widgets/generic_grid_widget.dart';
 import 'package:flutter_weather_app/widgets/grid_item_tile_widget.dart';
+import 'package:flutter_weather_app/widgets/hourly_forecast_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -270,101 +271,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: times.length,
-        itemBuilder: (context, i) {
-          final timeStr = times[i].toString();
-          final hour = timeStr.substring(11, 16);
-
-          List<Widget> dataRows = [];
-
-          void addRow(IconData icon, String label, String value, {String? unit}) {
-            dataRows.add(
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Icon(icon, size: 21, color: theme.colorScheme.primary),
-                    const SizedBox(width: 7),
-                    Expanded(
-                      child: Text(
-                        '$label: $value${unit ?? ""}',
-                        style: theme.textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          final temp = WeatherUtils.takeHours(hourly!['temperature_2m'], selectedHours);
-          if (temp.length > i) {
-            addRow(Icons.thermostat, "Temp", "${temp[i]}", unit: "°C");
-          }
-          final apparent = WeatherUtils.takeHours(hourly!['apparent_temperature'], selectedHours);
-          if (apparent.length > i) {
-            addRow(Icons.thermostat_outlined, "Ressentie", "${apparent[i]}", unit: "°C");
-          }
-          final humidity = WeatherUtils.takeHours(hourly!['relative_humidity_2m'], selectedHours);
-          if (humidity.length > i) {
-            addRow(Icons.water_drop, "Humidité", "${humidity[i]}", unit: "%");
-          }
-          final cloud = WeatherUtils.takeHours(hourly!['cloudcover'], selectedHours);
-          if (cloud.length > i) {
-            addRow(Icons.cloud, "Nuages", "${cloud[i]}", unit: "%");
-          }
-          final precip = WeatherUtils.takeHours(hourly!['precipitation'], selectedHours);
-          if (precip.length > i) {
-            addRow(Icons.grain, "Précip.", "${precip[i]}", unit: "mm");
-          }
-          final wind = WeatherUtils.takeHours(hourly!['windspeed_10m'], selectedHours);
-          if (wind.length > i) {
-            addRow(Icons.air, "Vent", "${wind[i]}", unit: "km/h");
-          }
-
-          // Optionnel : afficher si c'est le jour ou la nuit avec un icône
-          final isDay = WeatherUtils.takeHours(hourly!['is_day'], selectedHours);
-          if (isDay.length > i) {
-            addRow(
-                isDay[i] == 1 ? Icons.sunny : Icons.nightlight_round,
-                "Période",
-                isDay[i] == 1 ? "Jour" : "Nuit"
-            );
-          }
-
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            elevation: 3,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Container(
-              width: 300,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Affichage Jour et Heure
-                  Text(
-                    "Jour ${dayNumbers[i]}",
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.secondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    hour,
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ...dataRows,
-                ],
-              ),
-            ),
-          );
-        },
+        itemBuilder: (context, i) => HourlyForecastCard(
+          theme: theme,
           hourData: hourData,
+          dayNumber: dayNumbers[i],
+          time: times[i],
+          index: i,
+        ),
       ),
     );
   }
