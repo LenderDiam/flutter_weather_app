@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color bondiBlue = Color(0xFF008AB8);
-  static const Color robinEggBlue = Color(0xFF00BDD6);
-  static const Color pictonBlue = Color(0xFF4CCFE1);
-  static const Color spray = Color(0xFF80DEEA);
+  static const Color iceBlue = Color(0xFFe0fcfc);
   static const Color blizzardBlue = Color(0xFFB1EAF2);
+  static const Color robinEggBlue = Color(0xFF00BDD6);
+  static const Color bondiBlue = Color(0xFF008AB8);
+  static const Color tealGreen = Color(0xFF2a4448);
+  static const Color japaneseIndigo = Color(0x4d2a4448);
 
   static const Color error = Color(0xFFB00020);
 
@@ -15,8 +16,10 @@ class AppColors {
   static const ColorScheme light = ColorScheme(
     brightness: Brightness.light,
     primary: bondiBlue,
-    secondary: pictonBlue,
+    secondary: robinEggBlue,
+    tertiary: backgroundLight,
     surface: blizzardBlue,
+    surfaceContainerHighest: iceBlue,
     error: error,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
@@ -27,8 +30,10 @@ class AppColors {
   static const ColorScheme dark = ColorScheme(
     brightness: Brightness.dark,
     primary: robinEggBlue,
-    secondary: spray,
-    surface: pictonBlue,
+    secondary: blizzardBlue,
+    tertiary: backgroundDark,
+    surface: japaneseIndigo,
+    surfaceContainerHighest: tealGreen,
     error: error,
     onPrimary: Colors.black,
     onSecondary: Colors.black,
