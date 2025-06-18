@@ -8,7 +8,7 @@ final CardTheme appCardLightTheme = CardTheme(
 );
 
 final CardTheme appCardDarkTheme = CardTheme(
-  color: AppColors.dark.surface.withOpacity(0.1),
+  color: AppColors.dark.surface,
   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
 );

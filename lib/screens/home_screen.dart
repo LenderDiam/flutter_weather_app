@@ -126,6 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<int>(
+            icon: const Icon(Icons.arrow_drop_down),
+            iconEnabledColor: theme.colorScheme.secondary,
+            dropdownColor:  theme.colorScheme.tertiary,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: "Interval",

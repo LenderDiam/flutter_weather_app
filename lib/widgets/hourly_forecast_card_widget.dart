@@ -29,11 +29,11 @@ class HourlyForecastCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 4),
           child: Row(
             children: [
-              Icon(icon, size: 21, color: theme.colorScheme.primary),
+              Icon(icon, size: 21, color: theme.colorScheme.secondary),
               const SizedBox(width: 7),
               Expanded(
                 child: Text(
-                  '$label: $value${unit ?? ""}',
+                  '$label : $value${unit ?? ""}',
                   style: theme.textTheme.bodyMedium,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -64,7 +64,7 @@ class HourlyForecastCard extends StatelessWidget {
     }
     if (hourData['is_day']!.length > index) {
       final isDay = hourData['is_day']![index] == 1;
-      addRow(isDay ? Icons.sunny : Icons.nightlight_round, "Période", isDay ? "Jour" : "Nuit");
+      addRow(isDay ? Icons.sunny : Icons.nightlight_round, "Time", isDay ? "Day" : "Night");
     }
 
     return Card(
