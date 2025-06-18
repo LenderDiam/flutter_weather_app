@@ -37,6 +37,23 @@ class WeatherUtils {
     }
     return dayNumbers;
   }
+
+  /// Returns a map of all requested hourly weather series, truncated to [selectedHours] entries.
+  /// [fields] specifies which fields to include from [hourly] data.
+  /// Any missing or null field will result in an empty list for that entry.
+  static Map<String, List<dynamic>> getHourlySeries(
+      Map<String, dynamic>? hourly,
+      List<String> fields,
+      int selectedHours,
+      ) {
+    final Map<String, List<dynamic>> result = {};
+    for (final field in fields) {
+      final value = hourly != null ? hourly[field] : null;
+      result[field] = value != null ? WeatherUtils.takeHours(value, selectedHours) : <dynamic>[];
+    }
+    return result;
+  }
+
   /// Returns a map containing the first value for each key in [hourData].
   /// If a list is empty or missing, the value will be null for that key.
   static Map<String, dynamic> getFirstHourlyValues(

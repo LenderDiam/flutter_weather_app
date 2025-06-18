@@ -158,6 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _weatherDisplay(ThemeData theme) {
+    final hourData = WeatherUtils.getHourlySeries(
+      hourly,
+      hourlyFields,
+      selectedHours,
+    );
+
     return Column(
       children: [
         Icon(
@@ -171,15 +177,15 @@ class _HomeScreenState extends State<HomeScreen> {
           style: theme.textTheme.headlineLarge?.copyWith(fontSize: 58),
         ),
         const SizedBox(height: 24),
-        _mainDataGrid(theme),
+        _mainDataGrid(theme, hourData),
         const SizedBox(height: 24),
         _hourlyButton(theme),
-        if (showHourly) _hourlyForecastList(theme),
+        if (showHourly) _hourlyForecastList(theme, hourData),
       ],
     );
   }
 
-  Widget _mainDataGrid(ThemeData theme) {
+  Widget _mainDataGrid(ThemeData theme, Map<String, List<dynamic>> hourData) {
     final firstValues = WeatherUtils.getFirstHourlyValues(
       hourData,
       hourlyFields,
@@ -249,7 +255,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _hourlyForecastList(ThemeData theme) {
+  Widget _hourlyForecastList(
+      ThemeData theme, Map<String, List<dynamic>> hourData) {
     final times = WeatherUtils.takeHours(hourly!['time'], selectedHours);
     if (times.isEmpty) {
       return const Text("No hourly forecast available for this interval.");
@@ -357,6 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
+          hourData: hourData,
       ),
     );
   }
