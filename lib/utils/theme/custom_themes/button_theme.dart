@@ -8,8 +8,8 @@ final ButtonStyle elevatedButtonStyleLight = ElevatedButton.styleFrom(
 );
 
 final ButtonStyle elevatedButtonStyleDark = ElevatedButton.styleFrom(
-  backgroundColor: AppColors.dark.onSecondary,
-  foregroundColor: AppColors.dark.secondary,
+  backgroundColor: AppColors.dark.secondary,
+  foregroundColor: AppColors.dark.onSecondary,
   minimumSize: const Size(64, 56),
   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
 );
