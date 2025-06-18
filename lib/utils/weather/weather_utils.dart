@@ -37,4 +37,17 @@ class WeatherUtils {
     }
     return dayNumbers;
   }
+  /// Returns a map containing the first value for each key in [hourData].
+  /// If a list is empty or missing, the value will be null for that key.
+  static Map<String, dynamic> getFirstHourlyValues(
+      Map<String, List<dynamic>> hourData,
+      List<String> fields,
+      ) {
+    final Map<String, dynamic> result = {};
+    for (final field in fields) {
+      final list = hourData[field];
+      result[field] = (list != null && list.isNotEmpty) ? list[0] : null;
+    }
+    return result;
+  }
 }

@@ -180,6 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _mainDataGrid(ThemeData theme) {
+    final firstValues = WeatherUtils.getFirstHourlyValues(
+      hourData,
+      hourlyFields,
+    );
+
     final items = <GridItem>[
       GridItem(
         icon: Icons.air,
@@ -187,49 +192,42 @@ class _HomeScreenState extends State<HomeScreen> {
         value: "${current!['windspeed']}",
         unity: "km/h",
       ),
-      if (WeatherUtils.takeHours(hourly!['apparent_temperature'], selectedHours)
-          .isNotEmpty)
+      if (firstValues['apparent_temperature'] != null)
         GridItem(
           icon: Icons.thermostat,
           label: "Feels like",
-          value:
-              "${WeatherUtils.takeHours(hourly!['apparent_temperature'], selectedHours)[0]}",
+          value: "${firstValues['apparent_temperature']}",
           unity: "°C",
         ),
-      if (WeatherUtils.takeHours(hourly!['cloudcover'], selectedHours)
-          .isNotEmpty)
+      if (firstValues['cloudcover'] != null)
         GridItem(
           icon: Icons.cloud,
           label: "Cloud cover",
-          value:
-              "${WeatherUtils.takeHours(hourly!['cloudcover'], selectedHours)[0]}",
+          value: "${firstValues['cloudcover']}",
           unity: "%",
         ),
-      if (WeatherUtils.takeHours(hourly!['relative_humidity_2m'], selectedHours)
-          .isNotEmpty)
+      if (firstValues['relative_humidity_2m'] != null)
         GridItem(
           icon: Icons.water_drop,
           label: "Humidity",
-          value:
-              "${WeatherUtils.takeHours(hourly!['relative_humidity_2m'], selectedHours)[0]}",
+          value: "${firstValues['relative_humidity_2m']}",
           unity: "%",
         ),
-      if (WeatherUtils.takeHours(hourly!['precipitation'], selectedHours)
-          .isNotEmpty)
+      if (firstValues['precipitation'] != null)
         GridItem(
           icon: Icons.grain,
           label: "Precip.",
-          value:
-              "${WeatherUtils.takeHours(hourly!['precipitation'], selectedHours)[0]}",
+          value: "${firstValues['precipitation']}",
           unity: "mm",
         ),
-      if (WeatherUtils.takeHours(hourly!['is_day'], selectedHours).isNotEmpty)
+      if (firstValues['is_day'] != null)
         GridItem(
-          icon: hourly!['is_day'] == 1 ? Icons.sunny : Icons.nightlight,
+          icon: firstValues['is_day'] == 1 ? Icons.sunny : Icons.nightlight,
           label: "Time",
-          value: hourly!['is_day'] == 1 ? "Day" : "Night",
+          value: firstValues['is_day'] == 1 ? "Day" : "Night",
         ),
     ];
+
     return GenericGrid<GridItem>(
       items: items,
       itemBuilder: (context, item) => GridItemTile(item: item, theme: theme),
