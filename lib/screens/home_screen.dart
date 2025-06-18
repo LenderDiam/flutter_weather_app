@@ -257,15 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Text("No hourly forecast available for this interval.");
     }
 
-
-    DateTime? firstDay;
-    List<int> dayNumbers = [];
-    for (var t in times) {
-      DateTime dt = DateTime.parse(t);
-      firstDay ??= DateTime(dt.year, dt.month, dt.day);
-      int dayNum = dt.difference(firstDay).inDays + 1;
-      dayNumbers.add(dayNum);
-    }
+    final dayNumbers = WeatherUtils.computeDayNumbers(times);
 
     return SizedBox(
       height: 350,

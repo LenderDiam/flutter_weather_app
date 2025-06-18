@@ -23,4 +23,18 @@ class WeatherUtils {
     if (code >= 95) return Icons.flash_on;
     return Icons.help_outline;
   }
+
+  /// Computes the day number for each timestamp in [times], starting from 1 for the earliest date.
+  /// Returns a list of day numbers corresponding to each entry in [times].
+  static List<int> computeDayNumbers(List<dynamic> times) {
+    DateTime? firstDay;
+    List<int> dayNumbers = [];
+    for (var t in times) {
+      DateTime dt = DateTime.parse(t);
+      firstDay ??= DateTime(dt.year, dt.month, dt.day);
+      int dayNum = dt.difference(firstDay).inDays + 1;
+      dayNumbers.add(dayNum);
+    }
+    return dayNumbers;
+  }
 }
