@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 /// A service for geocoding city names using the Open-Meteo Geocoding API.
+/// This service can fetch multiple candidates for a city name in case of ambiguity.
 class GeocodingService {
   static const _baseUrl = 'https://geocoding-api.open-meteo.com/v1/search';
 
@@ -13,7 +14,7 @@ class GeocodingService {
   /// [format] - The response format (default: 'json').
   Uri _buildGeocodingUrl({
     required String cityName,
-    String language = 'fr',
+    String language = 'en',
     int count = 1,
     String format = 'json',
   }) {
@@ -37,31 +38,29 @@ class GeocodingService {
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
-  /// Extracts the first city result from the API response.
+  /// Extracts a list of candidate cities from the API response.
   ///
-  /// Returns a map with city information (name, latitude, longitude, country, admin1),
-  /// or null if no city was found.
-  Map<String, dynamic>? _extractFirstCity(Map<String, dynamic> json) {
+  /// Returns a list of maps with city information (name, latitude, longitude, country, admin1).
+  List<Map<String, dynamic>> _extractCityCandidates(Map<String, dynamic> json) {
     final results = json['results'];
     if (results != null && results is List && results.isNotEmpty) {
-      final city = results[0];
-      return {
+      return results.map<Map<String, dynamic>>((city) => {
         'name': city['name'],
         'latitude': city['latitude'],
         'longitude': city['longitude'],
         'country': city['country'],
         'admin1': city['admin1'],
-      };
+      }).toList();
     }
-    return null;
+    return [];
   }
 
-  /// Geocodes a city name and returns a map with its coordinates and info.
+  /// Fetches multiple city candidates for a given [cityName].
   ///
-  /// Returns `null` if the city is not found.
-  Future<Map<String, dynamic>?> fetchCityCoordinates(String cityName) async {
-    final url = _buildGeocodingUrl(cityName: cityName);
+  /// Returns a list of possible city matches, or an empty list if none are found.
+  Future<List<Map<String, dynamic>>> fetchCityCandidates(String cityName, {int count = 10}) async {
+    final url = _buildGeocodingUrl(cityName: cityName, count: count);
     final json = await _getJsonFromUrl(url);
-    return _extractFirstCity(json);
+    return _extractCityCandidates(json);
   }
 }

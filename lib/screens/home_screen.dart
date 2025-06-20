@@ -26,8 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> hourlyFields = WeatherService.hourlyFields;
 
   final weatherService = WeatherService();
+  final geocodingService = GeocodingService();
   final _formKey = GlobalKey<FormState>();
   final _cityController = TextEditingController();
+  String? displayCity;
 
   @override
   void dispose() {
@@ -36,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchWeather() async {
+  Future<void> fetchWeather(
+      {required double latitude, required double longitude}) async {
     setState(() {
       isLoading = true;
       error = null;
@@ -44,10 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      // TODO: replace with geocoding city -> lat/lon
       final data = await weatherService.fetchWeather(
-        latitude: 48.8566,
-        longitude: 2.3522,
+        latitude: latitude,
+        longitude: longitude,
       );
       setState(() {
         current = data['current'];
@@ -64,6 +67,77 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> handleCitySearch() async {
+    final cityName = _cityController.text.trim();
+    if (cityName.isEmpty) {
+      setState(() {
+        error = "Please enter a city name.";
+      });
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      error = null;
+      displayCity = null;
+      current = null;
+      hourly = null;
+    });
+
+    final candidates = await geocodingService.fetchCityCandidates(cityName);
+    setState(() {
+      isLoading = false;
+    });
+
+    if (candidates.isEmpty) {
+      setState(() {
+        error = "City not found.";
+      });
+      return;
+    }
+
+    Map<String, dynamic>? chosenCity;
+    if (candidates.length == 1) {
+      // Only one candidate, use it directly.
+      chosenCity = candidates[0];
+    } else {
+      // Multiple candidates, ask the user to choose.
+      chosenCity = await showDialog<Map<String, dynamic>>(
+        context: context,
+        builder: (context) => SimpleDialog(
+          title: const Text('Select the correct city'),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          children: candidates
+              .map((city) => SimpleDialogOption(
+                    child: Text(
+                        '${city['name']}, ${city['admin1'] ?? ''}, ${city['country']}'),
+                    onPressed: () => Navigator.pop(context, city),
+                  ))
+              .toList(),
+        ),
+      );
+      if (chosenCity == null) {
+        // User dismissed dialog
+        return;
+      }
+    }
+
+    setState(() {
+      displayCity =
+          "${chosenCity!['name']}, ${chosenCity['admin1'] ?? ''}, ${chosenCity['country']}";
+      isLoading = true;
+    });
+
+    await fetchWeather(
+      latitude: chosenCity['latitude'],
+      longitude: chosenCity['longitude'],
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -76,7 +150,6 @@ class _HomeScreenState extends State<HomeScreen> {
             color: theme.colorScheme.onPrimary,
           ),
         ),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -119,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _cityController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'City (not used yet)',
+              labelText: 'City',
               suffixIcon: Icon(Icons.location_city),
             ),
             onChanged: (text) => city = text,
@@ -128,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
           DropdownButtonFormField<int>(
             icon: const Icon(Icons.arrow_drop_down),
             iconEnabledColor: theme.colorScheme.secondary,
-            dropdownColor:  theme.colorScheme.tertiary,
+            dropdownColor: theme.colorScheme.tertiary,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: "Interval",
@@ -153,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ElevatedButton.icon(
               icon: const Icon(Icons.search),
               label: const Text("Get weather"),
-              onPressed: isLoading ? null : fetchWeather,
+              onPressed: isLoading ? null : handleCitySearch,
             ),
           ),
         ],
@@ -170,6 +243,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
+        if (displayCity != null) ...[
+          Text(
+            displayCity!,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: theme.colorScheme.secondary,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+        ],
         Icon(
           WeatherUtils.weatherIconFromCode(current!['weathercode']),
           size: 110,
