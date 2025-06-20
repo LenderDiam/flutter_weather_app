@@ -1,5 +1,29 @@
 import 'package:flutter/material.dart';
 
+/// A card widget that displays detailed hourly weather forecast information,
+/// including temperature, wind speed, cloud cover, precipitation, humidity, and time of day.
+///
+/// Typically used in weather apps to present hourly data for a specific day,
+/// supporting visual distinction via alternating background color.
+///
+/// Example usage:
+/// ```dart
+/// HourlyForecastCard(
+///   theme: Theme.of(context),
+///   hourData: weatherData,
+///   dayNumber: 2,
+///   time: '2025-06-20T13:00:00',
+///   index: 0,
+/// )
+/// ```
+///
+/// Fields:
+/// - [theme]: The [ThemeData] used for styling the card and its contents. (Required)
+/// - [hourData]: A map containing lists of hourly weather data keyed by variable names, e.g., 'temperature_2m'. (Required)
+/// - [dayNumber]: The day number to display (e.g., 1 for today, 2 for tomorrow). (Required)
+/// - [time]: The time value for the forecast (should be parsable to a string). (Required)
+/// - [index]: The position in the hourly list, used for alternating the card's background color. (Required)
+
 class HourlyForecastCard extends StatelessWidget {
   final ThemeData theme;
   final Map<String, List<dynamic>> hourData;

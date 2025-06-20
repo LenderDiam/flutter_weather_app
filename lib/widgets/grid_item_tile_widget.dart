@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/grid_item_model.dart';
 
+/// A tile widget for displaying a [GridItem] in a grid layout, showing its icon, label, and value.
+///
+/// Typically used within a grid to present metrics, statistics, or properties with consistent styling.
+/// Alternates background color on odd/even indices for visual distinction.
+///
+/// Example usage:
+/// ```dart
+/// GridItemTile(
+///   item: GridItem(
+///     icon: CupertinoIcons.thermometer,
+///     label: "Temperature",
+///     value: "24",
+///     unity: "°C",
+///   ),
+///   index: 0,
+/// )
+/// ```
+///
+/// Fields:
+/// - [item]: The [GridItem] to display in the tile. (Required)
+/// - [theme]: Optional [ThemeData] to override the inherited theme. (Optional)
+/// - [index]: The position of the tile in the grid, used for alternating background color. (Required)
+
 class GridItemTile extends StatelessWidget {
   final GridItem item;
   final ThemeData? theme;
