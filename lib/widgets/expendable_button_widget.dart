@@ -29,7 +29,7 @@ class ExpandableButton extends StatelessWidget {
       child: TextButton.icon(
         icon: Icon(
           expanded ? expandedIcon : collapsedIcon,
-          color: iconColor ?? Theme.of(context).colorScheme.secondary,
+          color: iconColor ?? Theme.of(context).colorScheme.primary,
         ),
         label: Text(
           expanded ? expandedLabel : collapsedLabel,

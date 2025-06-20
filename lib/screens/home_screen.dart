@@ -258,7 +258,6 @@ class _HomeScreenState extends State<HomeScreen> {
           showHourly = !showHourly;
         });
       },
-      iconColor: theme.colorScheme.secondary,
       textStyle: theme.textTheme.bodyMedium,
     );
   }
