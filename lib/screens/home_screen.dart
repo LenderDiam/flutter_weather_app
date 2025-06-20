@@ -232,9 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       if (firstValues['is_day'] != null)
         GridItem(
-          icon: firstValues['is_day'] == 1 ? Icons.sunny : Icons.nightlight,
+          icon: current!['is_day'] == 1 ? Icons.sunny : Icons.nightlight,
           label: "Time",
-          value: firstValues['is_day'] == 1 ? "Day" : "Night",
+          value: current!['is_day'] == 1 ? "Day" : "Night",
         ),
     ];
 
