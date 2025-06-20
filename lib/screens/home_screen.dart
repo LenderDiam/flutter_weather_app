@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/grid_item_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
+import 'package:flutter_weather_app/services/geocoding_service.dart';
 import 'package:flutter_weather_app/utils/theme/custom_themes/color_scheme.dart';
 import 'package:flutter_weather_app/utils/weather/weather_utils.dart';
 import 'package:flutter_weather_app/widgets/expendable_button_widget.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_weather_app/widgets/generic_grid_widget.dart';
 import 'package:flutter_weather_app/widgets/grid_item_tile_widget.dart';
 import 'package:flutter_weather_app/widgets/hourly_forecast_card_widget.dart';
 
+/// Home screen for the weather app.
+/// Allows the user to search for a city, select from possible matches, and display weather data.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -37,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> fetchWeather() async {
+  /// Fetches weather data for a given latitude and longitude.
+  ///
+  /// Updates the state with weather data or error messages.
   Future<void> fetchWeather(
       {required double latitude, required double longitude}) async {
     setState(() {
@@ -67,6 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  /// Handles the city search process, including candidate selection if needed.
+  ///
+  /// - Fetches possible city candidates.
+  /// - If one candidate: fetch weather directly.
+  /// - If multiple: prompts user to select.
+  /// - If none: shows error.
   Future<void> handleCitySearch() async {
     final cityName = _cityController.text.trim();
     if (cityName.isEmpty) {
@@ -183,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Renders the form section for entering city name and selecting interval.
   Widget _formSection(ThemeData theme) {
     return Form(
       key: _formKey,
@@ -234,6 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Renders the main weather display section after successful city search.
   Widget _weatherDisplay(ThemeData theme) {
     final hourData = WeatherUtils.getHourlySeries(
       hourly,
@@ -273,6 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Renders the grid with main weather data such as temperature, wind, humidity, etc.
   Widget _mainDataGrid(ThemeData theme, Map<String, List<dynamic>> hourData) {
     final firstValues = WeatherUtils.getFirstHourlyValues(
       hourData,
@@ -332,6 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Renders the expandable button to show or hide the hourly forecast.
   Widget _hourlyButton(ThemeData theme) {
     return ExpandableButton(
       expanded: showHourly,
@@ -346,6 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Renders the horizontal list of hourly forecast cards.
   Widget _hourlyForecastList(
       ThemeData theme, Map<String, List<dynamic>> hourData) {
     final times = WeatherUtils.takeHours(hourly!['time'], selectedHours);
