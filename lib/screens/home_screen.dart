@@ -96,6 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     final candidates = await geocodingService.fetchCityCandidates(cityName);
+
+    if (!mounted) return;
+
     setState(() {
       isLoading = false;
     });
@@ -117,7 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) => SimpleDialog(
           title: const Text('Select the correct city'),
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+          backgroundColor:
+              Theme.of(context).colorScheme.surfaceContainerHighest,
           children: candidates
               .map((city) => SimpleDialogOption(
                     child: Text(
@@ -127,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
               .toList(),
         ),
       );
+      if (!mounted) return;
       if (chosenCity == null) {
         // User dismissed dialog
         return;
@@ -143,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
       latitude: chosenCity['latitude'],
       longitude: chosenCity['longitude'],
     );
+
+    if (!mounted) return;
 
     setState(() {
       isLoading = false;
