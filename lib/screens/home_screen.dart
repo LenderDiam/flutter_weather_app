@@ -6,15 +6,24 @@ import 'package:flutter_weather_app/services/weather_service.dart';
 import 'package:flutter_weather_app/services/geocoding_service.dart';
 import 'package:flutter_weather_app/utils/theme/custom_themes/color_scheme.dart';
 import 'package:flutter_weather_app/utils/weather/weather_utils.dart';
+import 'package:flutter_weather_app/widgets/custom_app_bar_widget.dart';
 import 'package:flutter_weather_app/widgets/expendable_button_widget.dart';
 import 'package:flutter_weather_app/widgets/generic_grid_widget.dart';
 import 'package:flutter_weather_app/widgets/grid_item_tile_widget.dart';
 import 'package:flutter_weather_app/widgets/hourly_forecast_card_widget.dart';
+import 'package:flutter_weather_app/widgets/theme_mode_dropdown_widget.dart';
 
 /// Home screen for the weather app.
 /// Allows the user to search for a city, select from possible matches, and display weather data.
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onThemeChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.themeMode,
+    required this.onThemeChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -182,13 +191,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Weather",
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: theme.colorScheme.onPrimary,
-          ),
-        ),
+      appBar: CustomAppBar(
+        themeMode: widget.themeMode,
+        onThemeChanged: widget.onThemeChanged,
+        title: "Weather",
       ),
       body: SingleChildScrollView(
         child: Center(
