@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/grid_item_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
@@ -95,7 +97,24 @@ class _HomeScreenState extends State<HomeScreen> {
       hourly = null;
     });
 
-    final candidates = await geocodingService.fetchCityCandidates(cityName);
+    List<Map<String, dynamic>> candidates = [];
+    try {
+      candidates = await geocodingService.fetchCityCandidates(cityName);
+    } on SocketException {
+      if (!mounted) return;
+      setState(() {
+        error = "Vérifiez votre connexion Internet.";
+        isLoading = false;
+      });
+      return;
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        error = "Erreur inconnue: $e";
+        isLoading = false;
+      });
+      return;
+    }
 
     if (!mounted) return;
 
