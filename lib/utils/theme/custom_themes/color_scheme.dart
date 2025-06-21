@@ -6,7 +6,7 @@ class AppColors {
   static const Color robinEggBlue = Color(0xFF00BDD6);
   static const Color bondiBlue = Color(0xFF008AB8);
   static const Color tealGreen = Color(0xFF2a4448);
-  static const Color japaneseIndigo = Color(0x4d2a4448);
+  static const Color japaneseIndigo = Color(0xFF161e1f);
 
   static const Color error = Color(0xFFB00020);
 
