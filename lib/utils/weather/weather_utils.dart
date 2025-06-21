@@ -67,4 +67,15 @@ class WeatherUtils {
     }
     return result;
   }
+
+  /// Formats a city's display name using only non-null and non-empty values for name, admin1, and country.
+  /// Removes extra commas.
+  static String formatDisplayCityFromMap(Map<String, dynamic> city) {
+    final parts = [
+      city['name'],
+      city['admin1'],
+      city['country'],
+    ].where((e) => e != null && (e is String ? e.trim().isNotEmpty : true)).toList();
+    return parts.join(', ');
+  }
 }

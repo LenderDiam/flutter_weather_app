@@ -143,8 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Theme.of(context).colorScheme.surfaceContainerHighest,
           children: candidates
               .map((city) => SimpleDialogOption(
-                    child: Text(
-                        '${city['name']}, ${city['admin1'] ?? ''}, ${city['country']}'),
+                    child: Text(WeatherUtils.formatDisplayCityFromMap(city)),
                     onPressed: () => Navigator.pop(context, city),
                   ))
               .toList(),
@@ -158,8 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     setState(() {
-      displayCity =
-          "${chosenCity!['name']}, ${chosenCity['admin1'] ?? ''}, ${chosenCity['country']}";
+      displayCity = WeatherUtils.formatDisplayCityFromMap(chosenCity!);
       isLoading = true;
     });
 
@@ -282,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        if (displayCity != null) ...[
+        if (displayCity != null && displayCity!.trim().isNotEmpty) ...[
           Text(
             displayCity!,
             style: theme.textTheme.headlineSmall?.copyWith(
