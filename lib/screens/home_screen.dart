@@ -30,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showHourly = false;
   final List<String> hourlyFields = WeatherService.hourlyFields;
 
-  final weatherService = WeatherService();
-  final geocodingService = GeocodingService();
-  final _formKey = GlobalKey<FormState>();
-  final _cityController = TextEditingController();
+  final WeatherService weatherService = WeatherService();
+  final GeocodingService geocodingService = GeocodingService();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _cityController = TextEditingController();
   String? displayCity;
 
   @override
@@ -45,8 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Fetches weather data for a given latitude and longitude.
   ///
   /// Updates the state with weather data or error messages.
-  Future<void> fetchWeather(
-      {required double latitude, required double longitude}) async {
+  Future<void> fetchWeather({
+    required double latitude,
+    required double longitude,
+  }) async {
     setState(() {
       isLoading = true;
       error = null;
@@ -68,9 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
         error = 'Failed to load weather data';
       });
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -199,9 +203,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (isLoading)
                     const CircularProgressIndicator()
                   else if (error != null)
-                    Text(error!,
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: AppColors.error))
+                    Text(
+                      error!,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(color: AppColors.error),
+                      textAlign: TextAlign.center,
+                    )
                   else if (current != null && hourly != null)
                     _weatherDisplay(theme)
                   else
@@ -232,6 +239,10 @@ class _HomeScreenState extends State<HomeScreen> {
               suffixIcon: Icon(Icons.location_city),
             ),
             onChanged: (text) => city = text,
+            textInputAction: TextInputAction.search,
+            onFieldSubmitted: (_) {
+              if (!isLoading) handleCitySearch();
+            },
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<int>(
@@ -248,13 +259,15 @@ class _HomeScreenState extends State<HomeScreen> {
               DropdownMenuItem(value: 48, child: Text('48h')),
               DropdownMenuItem(value: 72, child: Text('72h')),
             ],
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  selectedHours = value;
-                });
-              }
-            },
+            onChanged: isLoading
+                ? null
+                : (value) {
+                    if (value != null) {
+                      setState(() {
+                        selectedHours = value;
+                      });
+                    }
+                  },
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -387,7 +400,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Renders the horizontal list of hourly forecast cards.
   Widget _hourlyForecastList(
-      ThemeData theme, Map<String, List<dynamic>> hourData) {
+    ThemeData theme,
+    Map<String, List<dynamic>> hourData,
+  ) {
     final times = WeatherUtils.takeHours(hourly!['time'], selectedHours);
     if (times.isEmpty) {
       return const Text("No hourly forecast available for this interval.");
