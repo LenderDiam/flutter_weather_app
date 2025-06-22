@@ -33,9 +33,6 @@ A modern weather application developed with Flutter, as a recruitment assessment
 - **Responsive UI**  
   The interface automatically adapts to mobile, tablet, desktop, and web screens.
 
-- **Accessibility**  
-  The app fully respects system text scaling and Flutter accessibility best practices.
-
 - **Error handling**  
   The app displays clear error messages if city lookup fails or if the weather API is unavailable.
 
@@ -53,7 +50,7 @@ A modern weather application developed with Flutter, as a recruitment assessment
 
 1. **Clone the repository**
    ```bash
-   git clone <REPOSITORY_URL>
+   git clone https://github.com/LenderDiam/flutter_weather_app.git
    cd flutter_weather_app
    ```
 
