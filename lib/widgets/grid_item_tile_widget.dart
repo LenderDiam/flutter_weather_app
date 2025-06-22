@@ -39,9 +39,11 @@ class GridItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData usedTheme = theme ?? Theme.of(context);
+    final int maxLabelLines = item.label.contains(' ') ? 2 : 1;
 
     return Card(
-      color: index % 2 == 1 ? usedTheme.colorScheme.surfaceContainerHighest : null,
+      color:
+          index % 2 == 1 ? usedTheme.colorScheme.surfaceContainerHighest : null,
       child: SizedBox.expand(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -54,7 +56,7 @@ class GridItemTile extends StatelessWidget {
               item.label,
               style: usedTheme.textTheme.bodyMedium,
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: maxLabelLines,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 2),

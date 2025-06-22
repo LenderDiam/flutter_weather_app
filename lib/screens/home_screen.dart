@@ -369,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (firstValues['precipitation'] != null)
         GridItem(
           icon: Icons.grain,
-          label: "Precip.",
+          label: "Precipitation",
           value: "${firstValues['precipitation']}",
           unity: "mm",
         ),
