@@ -11,7 +11,6 @@ import 'package:flutter_weather_app/widgets/expendable_button_widget.dart';
 import 'package:flutter_weather_app/widgets/generic_grid_widget.dart';
 import 'package:flutter_weather_app/widgets/grid_item_tile_widget.dart';
 import 'package:flutter_weather_app/widgets/hourly_forecast_card_widget.dart';
-import 'package:flutter_weather_app/widgets/theme_mode_dropdown_widget.dart';
 
 /// Home screen for the weather app.
 /// Allows the user to search for a city, select from possible matches, and display weather data.
@@ -38,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedHours = 24;
   bool showHourly = false;
   final List<String> hourlyFields = WeatherService.hourlyFields;
-
   final WeatherService weatherService = WeatherService();
   final GeocodingService geocodingService = GeocodingService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -190,6 +188,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    final showWeather = current != null && hourly != null;
+
+    final hourData = showWeather
+        ? WeatherUtils.getHourlySeries(hourly, hourlyFields, selectedHours)
+        : null;
+
     return Scaffold(
       appBar: CustomAppBar(
         themeMode: widget.themeMode,
@@ -198,33 +202,42 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _formSection(theme),
-                  const SizedBox(height: 28),
-                  if (isLoading)
-                    const CircularProgressIndicator()
-                  else if (error != null)
-                    Text(
-                      error!,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: AppColors.error),
-                      textAlign: TextAlign.center,
-                    )
-                  else if (current != null && hourly != null)
-                    _weatherDisplay(theme)
-                  else
-                    const Text(
-                      "Please enter the parameters and click \"Get weather\"",
-                      textAlign: TextAlign.center,
-                    ),
-                ],
+          child: Column(
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      _formSection(theme),
+                      const SizedBox(height: 28),
+                      if (isLoading)
+                        const CircularProgressIndicator()
+                      else if (error != null)
+                        Text(
+                          error!,
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: AppColors.error),
+                          textAlign: TextAlign.center,
+                        )
+                      else if (showWeather)
+                        _weatherDisplay(theme, hourData: hourData)
+                      else
+                        const Text(
+                          "Please enter the parameters and click \"Get weather\"",
+                          textAlign: TextAlign.center,
+                        ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              if (showWeather && showHourly)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: _hourlyForecastList(theme, hourData!),
+                ),
+            ],
           ),
         ),
       ),
@@ -290,12 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Renders the main weather display section after successful city search.
-  Widget _weatherDisplay(ThemeData theme) {
-    final hourData = WeatherUtils.getHourlySeries(
-      hourly,
-      hourlyFields,
-      selectedHours,
-    );
+  Widget _weatherDisplay(ThemeData theme,
+      {required Map<String, List<dynamic>>? hourData}) {
+    if (hourData == null) return const SizedBox();
 
     return Column(
       children: [
@@ -324,7 +334,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _mainDataGrid(theme, hourData),
         const SizedBox(height: 24),
         _hourlyButton(theme),
-        if (showHourly) _hourlyForecastList(theme, hourData),
       ],
     );
   }
